@@ -1,0 +1,275 @@
+:root {
+    --basc-green: #2980b9;
+    --basc-yellow: red;
+    --basc-brown: #2980b9;
+    --basc-white: #f8fafc;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  /* index */
+  body.index-body {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .front-content {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .basc-logo {
+    width: 120px;
+    margin-bottom: 20px;
+  }
+  
+  h1, h2 {
+    margin: 10px 0;
+    color: #2980b9;
+  }
+  
+  .tagline {
+    margin: 10px 0 20px;
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .start-button, .logout-button, .register-btn, .close-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 10px;
+    background-color: var(--basc-green);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .start-button:hover,
+  .logout-button:hover,
+  .register-btn:hover {
+    background-color: rgb(168, 0, 0);
+  }
+  
+  .close-btn {
+    background-color: #888;
+  }
+  
+  .login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  
+  .login-modal.show {
+    display: flex;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    max-width: 400px;
+    width: 90%;
+  }
+  
+  .modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .notification {
+    display: none;
+    margin-top: 15px;
+    color: rgb(168, 0, 0);
+    font-weight: bold;
+  }
+  
+  .notification.show {
+    display: block;
+  }
+
+  
+
+  /* General body styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+/* Container for the dashboard */
+.dashboard {
+  text-align: center;
+  max-width: 1200px;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Ticket status boxes */
+.ticket-status {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+/* Styling for each status box */
+.status-box {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 200px;
+  padding: 20px;
+  margin: 10px;
+  flex: 1 1 200px; /* Allows boxes to grow/shrink based on available space */
+  box-sizing: border-box;
+}
+
+/* Header styles */
+h1 {
+  font-size: 2em;
+  color: #333;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+p {
+  font-size: 2em;
+  color: #007bff;
+}
+
+/* Button styling */
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 1.1em;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* List styles for approved tickets */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Edit and delete buttons for approved tickets */
+button.edit, button.delete {
+  margin-left: 10px;
+  padding: 5px 10px;
+}
+
+button.edit {
+  background-color: #28a745;
+}
+
+button.edit:hover {
+  background-color: #218838;
+}
+
+button.delete {
+  background-color: #dc3545;
+}
+
+button.delete:hover {
+  background-color: #c82333;
+}
+
+/* Responsive styling for smaller screens */
+@media screen and (max-width: 768px) {
+  /* Stacking the status boxes on smaller screens */
+  .ticket-status {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .status-box {
+      width: 90%;
+      max-width: 400px;
+  }
+
+  button {
+      width: 100%;
+      font-size: 1em;
+  }
+
+  ul {
+      padding-left: 20px;
+  }
+}
+
+/* For mobile devices (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  h1 {
+      font-size: 1.5em;
+  }
+
+  h2 {
+      font-size: 1.3em;
+  }
+
+  p {
+      font-size: 1.5em;
+  }
+
+  button {
+      padding: 8px 16px;
+      font-size: 0.9em;
+  }
+
+  li {
+      font-size: 0.9em;
+  }
+}

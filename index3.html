@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kaakbay Sa Kinabukasan Help Desk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eef2f3;
+      color: #333;
+      display: flex;
+    }
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: #2c3e50;
+      padding-top: 60px;
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    .sidebar button {
+      color: white;
+      padding: 15px 25px;
+      background: none;
+      border: none;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .sidebar button:hover {
+      background: #34495e;
+    }
+    .main-content {
+      margin-left: 220px;
+      width: calc(100% - 220px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: linear-gradient(90deg, #3498db, #2c3e50);
+      color: white;
+      width: 100%;
+    }
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+    .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #f39c12;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .header {
+      background: linear-gradient(90deg, #3498db, #2c3e50);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      width: 100%;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: 20px auto;
+      padding: 30px;
+      background: linear-gradient(135deg, #6dcffb, #EBEBEB);
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      font-weight: bold;
+      color: #444;
+    }
+    input, select, textarea {
+      margin-top: 5px;
+      margin-bottom: 15px;
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      width: 100%;
+    }
+    button[type="submit"] {
+      background: #3498db;
+      color: white;
+      font-size: 16px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+    }
+    button[type="submit"]:hover {
+      background: #1f618d;
+    }
+    .form-section {
+      display: none;
+      width: 100%;
+    }
+    .ticket {
+      background: #fff;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .reply-box {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f1faff;
+      border-left: 4px solid #3498db;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <button onclick="showSection('formSection')">Submit Ticket</button>
+    <button onclick="showSection('submittedSection')">Ticket Submitted</button>
+    <button onclick="showSection('declinedSection')">Ticket Declined</button>
+    <button onclick="showSection('approvedSection')">Ticket Approved</button>
+    <button onclick="logout()">Logout</button>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="navbar">
+      <span></span>
+      <div class="profile">
+        <div class="profile-icon">Me</div>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="header">Welcome to the Help Desk Portal</div>
+
+    <!-- Form Section -->
+    <section id="formSection" class="form-section">
+      <div class="container">
+        <form onsubmit="return validateForm(event)">
+          <label for="fullName">Full Name:</label>
+          <input type="text" id="fullName" name="fullName" required>
+
+          <label for="plant">Plant Deployed:</label>
+          <input type="text" id="plant" name="plant" required>
+
+          <label for="birthDate">Birth Date:</label>
+          <input type="date" id="birthDate" name="birthDate" required>
+
+          <label for="phone">Active Phone Number:</label>
+          <input type="text" id="phone" name="phone" required>
+
+          <label for="description">Description of Concern:</label>
+          <textarea id="description" name="description" required></textarea>
+
+          <label for="category">Category:</label>
+          <select id="category" name="category" required>
+            <option value="">Select Category</option>
+            <option value="Certificate of Employment">Certificate of Employment</option>
+            <option value="Human Resource">Human Resource</option>
+            <option value="Benefits Concern">Benefits Concern</option>
+            <option value="CHRIS (Payslip)">CHRIS (Payslip)</option>
+            <option value="Clearance">Clearance</option>
+            <option value="CWCC (Savings and Loans)">CWCC (Savings and Loans)</option>
+            <option value="ISCPR (Interest on Share Capital and Patronage Refund)">ISCPR</option>
+            <option value="PPE (Personal Protective Equipment)">PPE</option>
+            <option value="Health ID and Permit">Health ID and Permit</option>
+          </select>
+
+          <label for="type">Type:</label>
+          <select id="type" name="type" required>
+            <option value="">Select Type</option>
+            <option value="Issue">New Request</option>
+            <option value="Request">Change Request</option>
+            <option value="Others">Others</option>
+          </select>
+
+          <label for="attachment">Attach a file (PDF, JPG, PNG)</label>
+          <input type="file" id="attachment" name="attachment" accept=".pdf,.jpg,.png">
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Ticket Lists -->
+    <section id="submittedSection" class="form-section">
+      <div class="container">
+        <h2>Submitted Tickets</h2>
+        <div id="submittedList"></div>
+      </div>
+    </section>
+
+    <section id="approvedSection" class="form-section">
+      <div class="container">
+        <h2>Approved Tickets</h2>
+        <div id="approvedList"></div>
+      </div>
+    </section>
+
+    <section id="declinedSection" class="form-section">
+      <div class="container">
+        <h2>Declined Tickets</h2>
+        <div id="declinedList"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function logout() {
+      alert("Logging out...");
+      localStorage.removeItem('userEmail');
+      window.location.href = "index.html";
+    }
+
+    function showSection(sectionId) {
+      const sections = ['formSection', 'submittedSection', 'declinedSection', 'approvedSection'];
+      sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+          section.style.display = id === sectionId ? 'block' : 'none';
+        }
+      });
+    }
+
+    function validateForm(event) {
+      event.preventDefault();
+      const ticket = {
+        id: Date.now(),
+        summary: document.getElementById('fullName').value,
+        plant: document.getElementById('plant').value,
+        birthDate: document.getElementById('birthDate').value,
+        phone: document.getElementById('phone').value,
+        description: document.getElementById('description').value,
+        category: document.getElementById('category').value,
+        type: document.getElementById('type').value,
+        email: document.getElementById('email').value,
+        status: 'submitted',
+        createdAt: new Date().toLocaleString()
+      };
+
+      const tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+      tickets.push(ticket);
+      localStorage.setItem('tickets', JSON.stringify(tickets));
+
+      alert("Ticket submitted successfully!");
+      showSection('submittedSection');
+      renderTickets();
+    }
+
+    function renderTickets() {
+      const tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+      const submittedList = document.getElementById('submittedList');
+      const approvedList = document.getElementById('approvedList');
+      const declinedList = document.getElementById('declinedList');
+
+      submittedList.innerHTML = '';
+      approvedList.innerHTML = '';
+      declinedList.innerHTML = '';
+
+      tickets.forEach(ticket => {
+        const div = document.createElement('div');
+        div.className = 'ticket';
+        div.innerHTML = `
+          <strong>${ticket.summary}</strong><br>
+          Plant: ${ticket.plant}<br>
+          Birth Date: ${ticket.birthDate}<br>
+          Phone: ${ticket.phone}<br>
+          ${ticket.description}<br>
+          Category: ${ticket.category}<br>
+          Email: ${ticket.email}<br>
+          Type: ${ticket.type}<br>
+          Date: ${ticket.createdAt}<br>
+          ${ticket.adminReply ? `<div class="reply-box"><strong>Admin Reply:</strong><br>${ticket.adminReply}</div>` : ''}
+        `;
+        if (ticket.status === 'submitted') {
+          submittedList.appendChild(div);
+        } else if (ticket.status === 'approved') {
+          approvedList.appendChild(div);
+        } else if (ticket.status === 'declined') {
+          declinedList.appendChild(div);
+        }
+      });
+    }
+
+    window.onload = function () {
+      showSection('formSection');
+      renderTickets();
+    };
+  </script>
+</body>
+</html>
+
+

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KSK Help Desk Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eef2f3;
+      color: #333;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: #2c3e50;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar button {
+      background: none;
+      border: none;
+      color: white;
+      padding: 15px 25px;
+      font-size: 16px;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .sidebar button:hover {
+      background: #34495e;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      padding: 30px 20px;
+      flex: 1;
+    }
+
+    .header {
+      background: linear-gradient(90deg, #3498db, #2c3e50);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      border-radius: 10px;
+    }
+
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .ticket {
+      background: #f9fbfc;
+      border-left: 5px solid #3498db;
+      margin-bottom: 20px;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .ticket h4 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .ticket small {
+      color: #777;
+    }
+
+    .ticket textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .ticket-actions button {
+      margin-right: 10px;
+      margin-top: 10px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      color: white;
+    }
+
+    .approve-btn { background: #2ecc71; }
+    .decline-btn { background: #e74c3c; }
+    .edit-btn    { background: #f39c12; }
+    .delete-btn  { background: #c0392b; }
+    .reply-btn   { background: #2980b9; }
+
+    @media (max-width: 768px) {
+      .main-content {
+        margin-left: 0;
+        padding: 20px;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .container {
+        margin: 0 10px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sidebar">
+    <button onclick="showSection('submittedSection')">Submitted</button>
+    <button onclick="showSection('approvedSection')">Approved</button>
+    <button onclick="showSection('declinedSection')">Declined</button>
+    <button onclick="logout()">Logout</button>
+  </nav>
+
+  <div class="main-content">
+    <div class="header">Admin Dashboard - Ticket Manager</div>
+
+    <section id="submittedSection" class="form-section container">
+      <h3>Submitted Tickets</h3>
+      <div id="submittedList"></div>
+    </section>
+
+    <section id="approvedSection" class="form-section container" style="display:none;">
+      <h3>Approved Tickets</h3>
+      <div id="approvedList"></div>
+    </section>
+
+    <section id="declinedSection" class="form-section container" style="display:none;">
+      <h3>Declined Tickets</h3>
+      <div id="declinedList"></div>
+    </section>
+  </div>
+
+  <script>
+    const tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+
+    function logout() {
+      localStorage.removeItem("userEmail");
+      window.location.href = "index.html";
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.form-section').forEach(section => {
+        section.style.display = 'none';
+      });
+      document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function renderTickets() {
+      const submittedList = document.getElementById('submittedList');
+      const approvedList = document.getElementById('approvedList');
+      const declinedList = document.getElementById('declinedList');
+      submittedList.innerHTML = approvedList.innerHTML = declinedList.innerHTML = '';
+
+      tickets.forEach(ticket => {
+        const div = document.createElement('div');
+        div.className = 'ticket';
+        div.innerHTML = `
+          <h4 contenteditable="false">${ticket.summary || 'No Summary'}</h4>
+          <p contenteditable="false">${ticket.description || 'No Description'}</p>
+          <small>Email: ${ticket.email} | Date: ${ticket.createdAt || ''}</small><br>
+          ${ticket.adminReply ? `<p><strong>Reply:</strong> ${ticket.adminReply}</p>` : ''}
+          <textarea placeholder="Write a reply..." style="display:none;"></textarea>
+          <div class="ticket-actions">
+            <button class="approve-btn" onclick="updateStatus(${ticket.id}, 'approved')">Approve</button>
+            <button class="decline-btn" onclick="updateStatus(${ticket.id}, 'declined')">Decline</button>
+            <button class="reply-btn" onclick="replyTo(${ticket.id}, this)">Reply</button>
+            <button class="edit-btn" onclick="editTicket(this)">Edit</button>
+            <button class="delete-btn" onclick="deleteTicket(${ticket.id})">Delete</button>
+          </div>
+        `;
+
+        if (ticket.status === 'submitted') submittedList.appendChild(div);
+        else if (ticket.status === 'approved') approvedList.appendChild(div);
+        else if (ticket.status === 'declined') declinedList.appendChild(div);
+      });
+    }
+
+    function updateStatus(id, newStatus) {
+      const index = tickets.findIndex(t => t.id === id);
+      if (index > -1) {
+        tickets[index].status = newStatus;
+        localStorage.setItem('tickets', JSON.stringify(tickets));
+        renderTickets();
+      }
+    }
+
+    function deleteTicket(id) {
+      const index = tickets.findIndex(t => t.id === id);
+      if (index > -1 && confirm('Delete this ticket?')) {
+        tickets.splice(index, 1);
+        localStorage.setItem('tickets', JSON.stringify(tickets));
+        renderTickets();
+      }
+    }
+
+    function replyTo(id, btn) {
+      const parent = btn.closest('.ticket');
+      const textarea = parent.querySelector('textarea');
+      if (textarea.style.display === 'none') {
+        textarea.style.display = 'block';
+        btn.textContent = 'Send';
+      } else {
+        const message = textarea.value.trim();
+        if (!message) return alert('Reply cannot be empty.');
+        const ticket = tickets.find(t => t.id === id);
+        if (ticket) {
+          ticket.adminReply = message;
+          localStorage.setItem('tickets', JSON.stringify(tickets));
+          renderTickets();
+        }
+      }
+    }
+
+    function editTicket(btn) {
+      const ticketDiv = btn.closest('.ticket');
+      const summary = ticketDiv.querySelector('h4');
+      const desc = ticketDiv.querySelector('p');
+      const isEditing = summary.isContentEditable;
+
+      if (!isEditing) {
+        summary.contentEditable = desc.contentEditable = true;
+        summary.style.background = desc.style.background = '#f0f8ff';
+        btn.textContent = 'Save';
+      } else {
+        summary.contentEditable = desc.contentEditable = false;
+        summary.style.background = desc.style.background = 'transparent';
+        const ticket = tickets.find(t => t.summary === summary.textContent.trim());
+        if (ticket) {
+          ticket.summary = summary.textContent.trim();
+          ticket.description = desc.textContent.trim();
+          localStorage.setItem('tickets', JSON.stringify(tickets));
+          btn.textContent = 'Edit';
+        }
+      }
+    }
+
+    window.onload = () => {
+      showSection('submittedSection');
+      renderTickets();
+    };
+  </script>
+</body>
+</html>
+
