@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Kaakbay Sa Kinabukasan Help Desk</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css" />
   <script>
-    const adminEmail = 'admin@gmail.com';
+    const adminEmails = ['admin@gmail.com', 'argalang@asiapro.coop'];
+
+    // Check if email is an admin
+    function isAdmin(email) {
+      return adminEmails.includes(email.toLowerCase());
+    }
 
     function checkLoginStatus() {
       const loggedInEmail = localStorage.getItem('userEmail');
       const startButton = document.querySelector('.start-button');
       const logoutButton = document.querySelector('.logout-button');
-      const modal = document.querySelector('.login-modal');
 
-
+      // Clear any previous onclick to avoid multiple bindings
       startButton.onclick = null;
 
-      if (loggedInEmail === adminEmail) {
+      if (loggedInEmail && isAdmin(loggedInEmail)) {
         startButton.textContent = 'ADMIN DASHBOARD';
         startButton.href = 'dashboard.html';
         logoutButton.style.display = 'inline-block';
@@ -44,15 +48,15 @@
     function registerUser() {
       const emailInput = document.querySelector('#email');
       const notification = document.querySelector('.notification');
-      const emailValue = emailInput.value.trim();
+      const emailValue = emailInput.value.trim().toLowerCase();
 
       if (emailValue === "") {
         alert('Please enter an email.');
         return;
       }
 
-      if (!emailValue.endsWith('@gmail.com')) {
-        alert('Only @gmail.com email addresses are allowed.');
+      if (!(emailValue.endsWith('@gmail.com') || emailValue.endsWith('@asiapro.coop'))) {
+        alert('Only @gmail.com or @asiapro.coop email addresses are allowed.');
         return;
       }
 
@@ -68,7 +72,6 @@
       }, 1000);
     }
 
-
     function logoutUser() {
       localStorage.removeItem('userEmail');
       checkLoginStatus();
@@ -79,10 +82,9 @@
     };
   </script>
 </head>
-<body>
-  <body class="index-body">
+<body class="index-body">
   <div class="front-content">
-    <img src="assets/img/asia-bg.png" alt="BASC Logo" class="basc-logo">
+    <img src="assets/img/asia-bg.png" alt="BASC Logo" class="basc-logo" />
     <h1>Welcome to the Kaakbay Sa Kinabukasan Help Desk.</h1>
     <p class="tagline">Your one-stop solution for all KSK-related issues.</p>
 
@@ -93,7 +95,7 @@
   <div class="login-modal">
     <div class="modal-content">
       <h3>REGISTER USING ONLY YOUR EMAIL</h3>
-      <input type="email" id="email" placeholder="Enter your email" required>
+      <input type="email" id="email" placeholder="Enter your email" required />
       <button class="register-btn" onclick="registerUser()">REGISTER</button>
       <button class="close-btn" onclick="closeModal()">CLOSE</button>
       <div class="notification"></div>

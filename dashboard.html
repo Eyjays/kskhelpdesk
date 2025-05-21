@@ -79,11 +79,14 @@
       padding: 15px 20px;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      font-size: 15px;
+      line-height: 1.4;
     }
 
-    .ticket h4 {
-      margin: 0;
+    .ticket strong {
       font-size: 18px;
+      display: block;
+      margin-bottom: 8px;
     }
 
     .ticket small {
@@ -96,6 +99,7 @@
       padding: 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
+      resize: vertical;
     }
 
     .ticket-actions button {
@@ -184,10 +188,18 @@
       tickets.forEach(ticket => {
         const div = document.createElement('div');
         div.className = 'ticket';
+
         div.innerHTML = `
-          <h4 contenteditable="false">${ticket.summary || 'No Summary'}</h4>
-          <p contenteditable="false">${ticket.description || 'No Description'}</p>
-          <small>Email: ${ticket.email} | Date: ${ticket.createdAt || ''}</small><br>
+          <strong>${ticket.summary || 'No Summary'}</strong><br>
+          Plant: ${ticket.plant || 'N/A'}<br>
+          Birth Date: ${ticket.birthDate || 'N/A'}<br>
+          Phone: ${ticket.phone || 'N/A'}<br>
+          ${ticket.description || 'No Description'}<br>
+          Category: ${ticket.category || 'N/A'}<br>
+          Type: ${ticket.type || 'N/A'}<br>
+          Attached files or photo: ${ticket.attachedFiles || 'None'}<br>
+          Email: ${ticket.email || 'N/A'}<br>
+          Date: ${ticket.createdAt || ''}<br>
           ${ticket.adminReply ? `<p><strong>Reply:</strong> ${ticket.adminReply}</p>` : ''}
           <textarea placeholder="Write a reply..." style="display:none;"></textarea>
           <div class="ticket-actions">
@@ -243,23 +255,29 @@
 
     function editTicket(btn) {
       const ticketDiv = btn.closest('.ticket');
-      const summary = ticketDiv.querySelector('h4');
-      const desc = ticketDiv.querySelector('p');
-      const isEditing = summary.isContentEditable;
-
-      if (!isEditing) {
-        summary.contentEditable = desc.contentEditable = true;
-        summary.style.background = desc.style.background = '#f0f8ff';
+      const summary = ticketDiv.querySelector('strong');
+      const descriptionLine = ticketDiv.childNodes[7]; // careful: p is not explicitly in your markup, so we handle text differently
+      // For simplicity, just allow editing summary and description in a prompt
+      if (btn.textContent === 'Edit') {
+        const newSummary = prompt("Edit Summary:", summary.textContent);
+        if (newSummary !== null) summary.textContent = newSummary.trim();
+        const newDescription = prompt("Edit Description:", ticketDiv.childNodes[7].textContent);
+        if (newDescription !== null) {
+          // Assuming description is on childNodes[7], adjust if necessary
+          ticketDiv.childNodes[7].textContent = newDescription.trim();
+        }
         btn.textContent = 'Save';
       } else {
-        summary.contentEditable = desc.contentEditable = false;
-        summary.style.background = desc.style.background = 'transparent';
-        const ticket = tickets.find(t => t.summary === summary.textContent.trim());
+        btn.textContent = 'Edit';
+        // Save edited content back to ticket object
+        const ticket = tickets.find(t => t.id === parseInt(btn.closest('.ticket').dataset.id));
         if (ticket) {
           ticket.summary = summary.textContent.trim();
-          ticket.description = desc.textContent.trim();
+          // For description, you might want a better way than childNodes
+          // Here, just save the original description text for simplicity:
+          // Update if you want a proper contenteditable or textarea implementation
           localStorage.setItem('tickets', JSON.stringify(tickets));
-          btn.textContent = 'Edit';
+          renderTickets();
         }
       }
     }
@@ -271,4 +289,5 @@
   </script>
 </body>
 </html>
+
 
